@@ -1,0 +1,36 @@
+ar-markerdetector (0.0.6~rc1) testing; urgency=medium
+  * Reload
+ -- Markus <markus.ylikerala@vtt.fi>  Fri, 17 Apr 2015 12:00:00 +0300
+	
+ar-markerdetector (0.0.5~rc1) testing; urgency=medium
+
+  * Planar image detection
+
+ -- Petri Honkamaa <petri.honkamaa@vtt.fi>  Wed, 1 April 2015 12:00:00 +0300
+
+ar-markerdetector (0.0.4~rc1) testing; urgency=medium
+
+  * Implemented 3D functionality
+
+ -- Markus <markus.ylikerala@vtt.fi>  Mon, 03 Nov 2014 12:00:00 +0300
+
+ar-markerdetector (0.0.3~rc1) testing; urgency=medium
+
+  * Implemented MarkerCount event to show when markers (dis)appear
+  * setOverlayImage URLs are now implemented using SOUP
+
+ -- Petri Honkamaa <petri.honkamaa@vtt.fi>  Wed, 22 Oct 2014 12:00:00 +0300
+
+ar-markerdetector (0.0.2~rc1) testing; urgency=medium
+
+  * setOverlayImage now accepts URLs (currently requires wget)
+  * Started implementing event for marker detection
+
+ -- Petri Honkamaa <petri.honkamaa@vtt.fi>  Fri, 17 Oct 2014 12:00:00 +0300
+
+ar-markerdetector (0.0.1~rc1) testing; urgency=medium
+
+  * Initial release.
+
+ -- Petri Honkamaa <petri.honkamaa@vtt.fi>  Wed, 13 Oct 2014 12:00:00 +0300
+

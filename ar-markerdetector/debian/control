@@ -1,0 +1,36 @@
+Source: ar-markerdetector
+Section: utils
+Priority: optional
+Maintainer: Petri Honkamaa <petri.honkamaa@vtt.fi>
+Build-Depends: debhelper (>= 8.0.0),
+ cmake,
+ kurento-media-server-6.0,
+ software-properties-common,
+ xinit,
+ libsoup2.4-dev,
+ pkg-config,
+ libopencv-dev
+# kms-core-dev,
+# kms-elements-dev,
+# kms-filters-dev,
+# libopencv-dev
+Standards-Version: 3.9.4
+
+Package: ar-markerdetector
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+Description: AR Marker detector for Kurento
+
+Package: ar-markerdetector-dev
+Architecture: any
+Depends: ar-markerdetector (= ${binary:Version}),
+  kurento-media-server-dev-6.0,
+  software-properties-common,
+  xinit, 
+  libsoup2.4-dev,
+ libopencv-dev
+#  kms-core-dev,
+#  kms-elements-dev,
+#  kms-filters-dev,
+#  libopencv-dev,
+Description: AR Marker detector for Kurento dev

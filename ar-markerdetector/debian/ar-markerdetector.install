@@ -1,0 +1,5 @@
+usr/lib/*/lib*.so.*
+usr/lib/*/kurento/*/*.so
+../../lib/libIrrlicht.so.1.9.0 usr/local/lib/
+../../lib/libalvar200.so usr/local/lib/
+

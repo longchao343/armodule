@@ -1,0 +1,330 @@
+{
+  "remoteClasses": [
+    {
+      "name": "ArMarkerdetector",
+      "extends": "OpenCVFilter",
+      "doc": "ArMarkerdetector interface. Documentation about the module",
+      "constructor": {
+	"doc": "Create an element",
+	"params": [
+	  {
+	    "name": "mediaPipeline",
+	    "doc": "the parent :rom:cls:`MediaPipeline`",
+	    "type": "MediaPipeline",
+	    "final": true
+	  }
+	]
+      },
+      "methods": [
+{
+          "name": "setPose",
+          "doc": "TODO",
+          "params": [
+            {
+              "name": "id",
+              "doc": "TODO",
+              "type": "int"
+            },
+            {
+              "name": "type",
+              "doc": "TODO",
+              "type": "int"
+            },
+            {
+              "name": "value",
+              "doc": "TODO",
+              "type": "float"
+            }
+          ]
+        },
+{
+          "name": "enableAugmentation",
+          "doc": "TODO",
+          "params": [
+            {
+              "name": "enable",
+              "doc": "enableAugmentation",
+              "type": "boolean"
+            }
+          ]
+        },
+{
+          "name": "enableMarkerCountEvents",
+          "doc": "TODO",
+          "params": [
+            {
+              "name": "enable",
+              "doc": "enableMarkerCountvents",
+              "type": "boolean"
+            }
+          ]
+        },
+{
+          "name": "enableAugmentationSet",
+          "doc": "TODO",
+          "params": [
+            {
+              "name": "arset",
+              "doc": "enableAugmentation",
+              "type": "int[]"
+            }
+          ]
+        },
+{
+          "name": "disableAugmentationSet",
+          "doc": "TODO",
+          "params": [
+            {
+              "name": "arset",
+              "doc": "disableAugmentation",
+              "type": "int[]"
+            }
+          ]
+        },
+{
+          "name": "setArThing",
+          "doc": "TODO",
+          "params": [
+            {
+              "name": "arThing",
+              "doc": "setArThing",
+              "type": "ArThing[]"
+            }
+          ]
+        },
+{
+          "name": "setMarkerPoseFrequency",
+          "doc": "TODO",
+          "params": [
+            {
+              "name": "enable",
+              "doc": "enableMarkerPoseEvents based on time",
+              "type": "boolean"
+            },
+            {
+              "name": "frequency",
+              "doc": "generate with Hz",
+              "type": "float"
+            }
+          ]
+        },
+{
+          "name": "setMarkerPoseFrameFrequency",
+          "doc": "TODO",
+          "params": [
+            {
+              "name": "enable",
+              "doc": "enableMarkerPoseEvents based on frames",
+              "type": "boolean"
+            },
+            {
+              "name": "frequency",
+              "doc": "generate for every nth frame, n e [1, ...)",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "name": "setShowDebugLevel",
+          "doc": "TODO",
+          "params": [
+            {
+              "name": "showDebugLevel",
+              "doc": "show debug info on image",
+              "type": "int"
+            }
+          ]
+        }
+      ],
+      "events": [
+        "MarkerCount", "MarkerPose"
+
+      ]
+    }
+  ],
+
+
+"complexTypes":[
+{
+    "name": "ArKvpString",
+    "doc": "AR KeyValuePair",
+    "typeFormat": "REGISTER",
+    "properties": [
+        {
+            "name": "key",
+            "doc": "key",
+            "type": "String"
+        },
+        {
+            "name": "value",
+            "doc": "value",
+            "type": "String"
+        }
+    ]
+},
+{
+    "name": "ArKvpInteger",
+    "doc": "AR KeyValuePair",
+    "typeFormat": "REGISTER",
+    "properties": [
+        {
+            "name": "key",
+            "doc": "key",
+            "type": "String"
+        },
+        {
+            "name": "value",
+            "doc": "value",
+            "type": "int"
+        }
+    ]
+},
+{
+    "name": "ArKvpFloat",
+    "doc": "AR KeyValuePair",
+    "typeFormat": "REGISTER",
+    "properties": [
+        {
+            "name": "key",
+            "doc": "key",
+            "type": "String"
+        },
+        {
+            "name": "value",
+            "doc": "value",
+            "type": "float"
+        }
+    ]
+},
+{
+    "name": "ArMarkerPose",
+    "doc": "Pose doc",
+    "typeFormat": "REGISTER",
+    "properties": [
+        {
+            "name": "markerId",
+            "doc": "marker id",
+            "type": "int"
+        },
+        {
+            "name": "matrixModelview",
+            "doc": "marker modelview matrix",
+            "type": "float[]"
+        }
+    ]
+},
+{
+      "name": "OverlayType",
+      "doc": "TODO",
+      "typeFormat": "ENUM",
+      "values": [
+        "TYPE2D",
+        "TYPE3D"
+      ]
+    },
+{
+      "name": "ArThing",
+      "doc": "ArThing doc",
+    "typeFormat": "REGISTER",
+       "properties": [
+        {
+          "name": "markerId",
+          "doc": "marker id",
+          "type": "int"
+        },
+	   {
+              "name": "overlayType",
+              "doc": "TODO",
+              "type": "OverlayType"
+            },
+
+	{
+          "name": "strings",
+          "doc": "TODO",
+          "type": "ArKvpString[]"
+	},
+          {
+              "name": "integers",
+              "doc": "TODO",
+              "type": "ArKvpInteger[]"
+            },
+            {
+              "name": "floats",
+              "doc": "TODO",
+              "type": "ArKvpFloat[]"
+            }
+      ]
+}
+],
+  "events": [
+    {
+      "name": "MarkerCount",
+      "extends": "Media",
+      "doc": "An event that is sent when the number of visible markers is changed. Tracking coordinates for the markers is going to be sent with some other approach.",
+      "properties": [
+        {
+          "name": "sequenceNumber",
+          "doc": "sequence number",
+          "type": "int"
+        },
+        {
+          "name": "countTimestamp",
+          "doc": "countTimestamp",
+          "type": "int"
+        },
+        {
+          "name": "markerId",
+          "doc": "marker id",
+          "type": "int"
+        },
+        {
+          "name": "markerCount",
+          "doc": "Number of visible markers with the specified id",
+          "type": "int"
+        },
+        {
+          "name": "markerCountDiff",
+          "doc": "How much the markerCount was changed from the previous situation",
+          "type": "int"
+        }
+      ]
+    },
+ {
+      "name": "MarkerPose",
+      "extends": "Media",
+      "doc": "Matrices for marker pose",
+      "properties": [
+        {
+          "name": "sequenceNumber",
+          "doc": "sequence number",
+          "type": "int"
+        },
+        {
+          "name": "poseTimestamp",
+          "doc": "poseTimestamp",
+          "type": "int"
+        },
+        {
+          "name": "width",
+          "doc": "resolution width",
+          "type": "int"
+        },
+        {
+          "name": "height",
+          "doc": "resolution height",
+          "type": "int"
+        },
+        {
+          "name": "matrixProjection",
+          "doc": "marker projection matrix",
+          "type": "float[]"
+        },
+        {
+          "name": "markerPose",
+          "doc": "markerPose",
+          "type": "ArMarkerPose[]"
+        }       
+      ]
+    }
+  ]
+}
