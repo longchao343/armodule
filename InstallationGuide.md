@@ -106,5 +106,5 @@ If you're not authorized to access X, then:
 xhost +
 ```
 
-Congratulations, ArModule is not installed. Please see the DevelopersGuide.md to go further
+Congratulations, ArModule is now installed. Please see the DevelopersGuide.md to go further
 =========================
