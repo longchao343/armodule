@@ -1,4 +1,4 @@
-Our solution utilizes the following software:
+Kurento is distributed as Open Source Software basing LGPL v2.1 license.
 
 ALVAR 2.0.0 - A Library for Virtual and Augmented Reality
 Copyright 2007-2012 VTT Technical Research Centre of Finland
