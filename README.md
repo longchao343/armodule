@@ -7,3 +7,8 @@ ARModule can render 2D and 3D augmentation with OpenCV and Irrlicht rendering en
 
 The repository contains documentation for installing and utilising the ArModule. The repository contains description of the architecture of the ARModule and also the source code of the ARModule implementation.
 
+**Alvar Markers**
+
+Some Alvar markers can be found eg from [AlvarMarkers](https://github.com/nubomedia-vtt/armodule/tree/master/AlvarMarkers) 
+Eg the zero marker is defined as MarkerData_0.png
+
