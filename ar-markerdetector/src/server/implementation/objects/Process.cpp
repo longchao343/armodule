@@ -118,6 +118,8 @@ SIrrlichtCreationParameters p;
 	device->run();
 	std::cout<<"IRRLICHT DEVICE IS RUNNING" << std::endl;
 
+	driver->setRenderTarget(rt, true, true, video::SColor(0,0,0,255));   
+
 	width = mat.cols;
 	height = mat.rows;
 
@@ -324,15 +326,16 @@ void ArProcess::detect(cv::Mat& mat){
 	};
         marker.pose.SetMatrixGL(mgl, false);
         detectedMarkerData.push_back(marker);
-	std::cout << std::endl <<"***SMART PLANAR DETECTED\t" << getSubTime() << std::endl;
+	//std::cout << std::endl <<"***SMART PLANAR DETECTED\t" << getSubTime() << std::endl;
+	SMART_TIMESTAMP("PLANAR DETECTED", getSubTime());
       }
     }
     else{
-      std::cout << std::endl <<"***SMART NO MARKERS OR PLANARS DETECTED\t" << getSubTime()<< std::endl;
+      //std::cout << std::endl <<"***SMART NO MARKERS OR PLANARS DETECTED\t" << getSubTime()<< std::endl;
     }
   }
   else{
-    std::cout << std::endl <<"***SMART MARKERS DETECTED\t" << getSubTime()<< std::endl;
+    //std::cout << std::endl <<"***SMART MARKERS DETECTED\t" << getSubTime()<< std::endl;
   }
   //std::cout << std::endl <<"***SMART DETECT END\t" << getSubTime();
   //std::cout << std::endl << "JEE 4" << std::endl<<std::flush;
@@ -382,7 +385,7 @@ void ArProcess::proactivate(cv::Mat& mat){
       return;
     }
     solveProjectionMatrix(mat);
-    std::cout << std::endl <<"***SMART RESOLUTION\t" << getSubTime()<< std::endl;
+    //std::cout << std::endl <<"***SMART RESOLUTION\t" << getSubTime()<< std::endl;
   }
   if(reboot){
     //std::cout<<"try to load content" << std::endl;
@@ -390,7 +393,7 @@ void ArProcess::proactivate(cv::Mat& mat){
       populate();
       reboot = false;
       solveProjectionMatrix(mat);
-      std::cout << std::endl <<"***SMART REBOOT\t" << getSubTime()<< std::endl;
+      SMART_TIMESTAMP("REBOOT", getSubTime());
     }
   }
 }
@@ -691,6 +694,9 @@ irr::scene::IAnimatedMeshSceneNode* ArProcess::loadNode(std::string modelUrl, st
       return NULL;
     }
   }
+
+  mesh->setHardwareMappingHint(scene::EHM_STATIC);
+  //  mesh->setHardwareMappingHint(scene::EHM_STREAM);
   return smgr->addAnimatedMeshSceneNode(mesh);      
 }
 
@@ -733,13 +739,18 @@ void ArProcess::populate(){
     parseAugmentable(arThing, strings, floats);      
 
     std::cout << "Loading model from: >>>" << strings["model"] << "<<<" << std::endl;
+
+    std::cout << "GO A " << std::endl;
     if(strings.find("model") == strings.end()){
+    std::cout << "GO B" << std::endl;
       std::cout<<"Bizarre XDModel" << std::endl;
       continue;
     }
+    std::cout << "GO C" << std::endl;
 
 #if USE_MARKERLESS
     if (strings.find("detect_planar") != strings.end()) {
+      std::cout<<"got detect_planar" << std::endl;
       planar_image_ids[strings["detect_planar"]] = arThing->getMarkerId();
       std::cout<<"Planar image \""<<strings["detect_planar"]<<" can replace marker "<<arThing->getMarkerId()<<std::endl;
     }
@@ -816,7 +827,7 @@ void ArProcess::populate(){
 #endif
 
   pthread_mutex_unlock(&mMutex);
-  std::cout << std::endl <<"***SMART GOGO\t" << getSubTime()<< std::endl;
+  //std::cout << std::endl <<"***SMART GOGO\t" << getSubTime()<< std::endl;
 }
 
 void ArProcess::createPlanarConfiguration(){
@@ -961,7 +972,7 @@ void ArProcess::augment(cv::Mat& mat){
       IplImage img = mat;
       //std::cout << std::endl <<"***SMART AUGMENT BEGIN\t" << getSubTime()<< std::endl;
       if(augment2DModel(&img) != 0){
-	std::cout << std::endl <<"***SMART AUGMENTED 2D\t" << getSubTime()<< std::endl;
+	//std::cout << std::endl <<"***SMART AUGMENTED 2D\t" << getSubTime()<< std::endl;
       }
       if(augment3DModel(mat) != 0){
 	//std::cout << std::endl <<"***SMART AUGMENTED 3D\t" << getSubTime()<< std::endl;
@@ -1027,8 +1038,14 @@ int ArProcess::augment2DModel(IplImage *image) {
 
 int ArProcess::augment3DModel(cv::Mat& mat){
   int matSize = mat.rows*mat.cols*mat.elemSize();  
+
+#if 0
   unsigned char *buffer = new unsigned char[matSize];
   memcpy(buffer, mat.data, matSize);
+
+
+  SMART_TIMESTAMP("AUGMENTED 3D CV_2_IRR_BUFFER\t", getSubTime());
+
   video::IImage* img;
   int augmented  = 0;
   if(mat.channels() == 4){
@@ -1045,9 +1062,19 @@ int ArProcess::augment3DModel(cv::Mat& mat){
     delete buffer;
     return augmented;
   }
-  
-  driver->setRenderTarget(rt, true, true, video::SColor(0,0,0,255));   
+#else
+
+
+  int augmented  = 0;
+  video::IImage* img = driver->createImageFromData(irr::video::ECOLOR_FORMAT(irr::video::ECF_A8R8G8B8), core::dimension2d<u32>(mat.cols, mat.rows), mat.data);
+
+#endif
+
+    //driver->setRenderTarget(rt, true, true, video::SColor(0,0,0,255));   
+
   video::ITexture* imgTxt = driver->addTexture("bg", img);	
+
+
 	
   driver->beginScene(true, true, 0);
   //std::cout<<"Bizarre A" << std::endl;    
@@ -1056,7 +1083,7 @@ int ArProcess::augment3DModel(cv::Mat& mat){
 		      video::SColor(255,255,255,255), true);
   //std::cout<<"Bizarre B" << std::endl;      
 
-  std::cout << std::endl <<"***SMART AUGMENTED 3D CV_2_IRR\t" << getSubTime()<< std::endl;
+  SMART_TIMESTAMP("AUGMENTED 3D CV_2_IRR", getSubTime());
 
   if(detectedMarkerData.size() > 0){
     irr::core::CMatrix4<f32> projectionMatrix = 
@@ -1130,21 +1157,22 @@ int ArProcess::augment3DModel(cv::Mat& mat){
     }
 
     smgr->drawAll();
-  
+    
     for(std::vector<int>::iterator it=shown.begin(); it!=shown.end(); ++it){
       nodes[*it]->setVisible(false);
     }
-    std::cout << std::endl <<"***SMART AUGMENTED 3D RTT\t" << getSubTime()<< std::endl;
+    SMART_TIMESTAMP("AUGMENTED 3D RTT", getSubTime());
   }
   
   driver->endScene();
-  std::cout << std::endl <<"***SMART AUGMENTED 3D IRR_2_CV_1\t" << getSubTime()<< std::endl;
+  SMART_TIMESTAMP("AUGMENTED 3D IRR_2_CV", getSubTime());
   driver->removeTexture(imgTxt);
-  std::cout << std::endl <<"***SMART AUGMENTED 3D IRR_2_CV_2\t" << getSubTime()<< std::endl;
+  //SMART_TIMESTAMP("AUGMENTED 3D IRR_2_CV_2", getSubTime());
   img->drop();
-  std::cout << std::endl <<"***SMART AUGMENTED 3D IRR_2_CV_3\t" << getSubTime()<< std::endl;
-
-  void* imgData = rt->lock(video::E_TEXTURE_LOCK_MODE(video::ETLM_READ_ONLY));
+  //SMART_TIMESTAMP("AUGMENTED 3D IRR_2_CV_3", getSubTime());
+  
+#if 1
+  void* imgData   = rt->lock(video::E_TEXTURE_LOCK_MODE(video::ETLM_READ_ONLY));
   if(imgData != NULL){
     memcpy(mat.data, imgData, matSize);
   }
@@ -1153,14 +1181,20 @@ int ArProcess::augment3DModel(cv::Mat& mat){
       std::cout<<"GOAR BIZARRE imgData of Texture:" << std::endl;
     }
   }
-  rt->unlock();
-  std::cout << std::endl <<"***SMART AUGMENTED 3D IRR_2_CV_4\t" << getSubTime()<< std::endl;  
-  delete buffer;
+#endif
 
-  std::cout << std::endl <<"***SMART AUGMENTED 3D IRR_2_CV_5\t" << getSubTime()<< std::endl;
+  rt->unlock();
+  //SMART_TIMESTAMP("AUGMENTED 3D IRR_2_CV_4", getSubTime());  
+
+#if 0
+  delete buffer;
+#endif
+
+  //  SMART_TIMESTAMP("AUGMENTED 3D IRR_2_CV_5", getSubTime());
   
   return augmented;
 }
+
 
 void ArProcess::setPoseScale(irr::scene::IAnimatedMeshSceneNode* node, float value){
   core::vector3df scale = node->getScale();

@@ -12,6 +12,12 @@
 #include "ArKvpFloat.hpp"
 #include <memory>
 
+#if 0
+#define SMART_TIMESTAMP(msg, time); {std::cout << std::endl << "***SMART " << msg << "\t" << time << std::endl;}
+#else
+#define SMART_TIMESTAMP(msg, time); /**/
+#endif
+
 #include "irrlicht.h"
 #include <sys/time.h>
 
