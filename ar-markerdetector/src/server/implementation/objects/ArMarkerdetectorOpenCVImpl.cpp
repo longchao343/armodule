@@ -26,7 +26,10 @@ void ArMarkerdetectorOpenCVImpl::process (cv::Mat &orgMat)
 {
   unsigned long timeStamp = 0;
   ar.getTimeStamp(&timeStamp);
-  std::cout << std::endl <<"***SMART KMS (WITHOUT ARFILTER)\t" << ar.getElapsedTime()<< std::endl;
+  //std::cout << std::endl <<"***SMART KMS (WITHOUT ARFILTER)\t" << ar.getElapsedTime()<< std::endl;
+
+  SMART_TIMESTAMP("KMS (WITHOUT ARFILTER)", ar.getElapsedTime());
+
   //std::cout << std::endl <<"***SMART TIME\t" << timeStamp << std::endl;
   ar.start();
 
@@ -61,11 +64,14 @@ void ArMarkerdetectorOpenCVImpl::process (cv::Mat &orgMat)
   try{
   ar.resetFilterTime();
   ar.proactivate(twisted ? mat : orgMat);
-  std::cout << std::endl <<"***SMART PROACTIVE\t" << ar.getFilterTime()<< std::endl;
+  //std::cout << std::endl <<"***SMART PROACTIVE\t" << ar.getFilterTime()<< std::endl;
+
+  //SMART_TIMESTAMP("PROACTIVE", ar.getFilterTime());
 
   ar.resetFilterTime();
   ar.detect(twisted ? mat : orgMat);
-  std::cout << std::endl <<"***SMART ALLDETECTED\t" << ar.getFilterTime()<< std::endl;
+  //std::cout << std::endl <<"***SMART ALLDETECTED\t" << ar.getFilterTime()<< std::endl;
+  SMART_TIMESTAMP("ALLDETECTED", ar.getFilterTime());
 
 #if 0
 #if SHOWRESO
@@ -76,11 +82,12 @@ void ArMarkerdetectorOpenCVImpl::process (cv::Mat &orgMat)
 
   ar.resetFilterTime();
   ar.augment(twisted ? mat : orgMat);  
-  std::cout << std::endl <<"***SMART ALL AUGMENTED\t" << ar.getFilterTime()<< std::endl;
+  //std::cout << std::endl <<"***SMART ALL AUGMENTED\t" << ar.getFilterTime()<< std::endl;
+  SMART_TIMESTAMP("ALL AUGMENTED", ar.getFilterTime());
 
   ar.resetFilterTime();
   ar.generateEvents(getSharedFromThis(), signalMarkerPose, signalMarkerCount, twisted ? mat : orgMat);
-  std::cout << std::endl <<"***SMART ALL EVENTS\t" << ar.getFilterTime()<< std::endl;
+  //std::cout << std::endl <<"***SMART ALL EVENTS\t" << ar.getFilterTime()<< std::endl;
 
   }
 catch (const std::exception& ex) {
@@ -120,7 +127,8 @@ catch (const std::exception& ex) {
 #endif
     }
 #endif
-  std::cout << std::endl <<"***SMART ARFILTER (ONLY)\t"<< ar.getElapsedTime()<< std::endl;
+    //std::cout << std::endl <<"***SMART ARFILTER (ONLY)\t"<< ar.getElapsedTime()<< std::endl;
+  SMART_TIMESTAMP("ARFILTER (ONLY)", ar.getElapsedTime());
   ar.start();
 }
   
