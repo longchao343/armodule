@@ -33,7 +33,7 @@ In detail the filtering steps for the process is following:
 7.	the image data is substituted to the OpenCV video frame
 
 
-![Teaser](https://github.com/nubomedia-vtt/armodule/tree/master/images/teaser.png)
+![Teaser](https://raw.githubusercontent.com/nubomedia-vtt/armodule/master/images/teaser.png)
 
 Currently AR filter supports detection of 
 both AlvarMarkers and planar images ie things
