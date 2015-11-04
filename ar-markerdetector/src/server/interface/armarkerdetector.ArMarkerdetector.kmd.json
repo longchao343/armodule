@@ -18,28 +18,28 @@
       "methods": [
 {
           "name": "setPose",
-          "doc": "TODO",
+          "doc": "Not used/implemented yet and may be removed",
           "params": [
             {
               "name": "id",
-              "doc": "TODO",
+              "doc": "",
               "type": "int"
             },
             {
               "name": "type",
-              "doc": "TODO",
+              "doc": "",
               "type": "int"
             },
             {
               "name": "value",
-              "doc": "TODO",
+              "doc": "",
               "type": "float"
             }
           ]
         },
 {
           "name": "enableAugmentation",
-          "doc": "TODO",
+          "doc": "Sets the enabled state of the 2D and 3D rendering",
           "params": [
             {
               "name": "enable",
@@ -50,7 +50,7 @@
         },
 {
           "name": "enableMarkerCountEvents",
-          "doc": "TODO",
+          "doc": "Sets the enabled state for notifying the listener when the number of markers changes",
           "params": [
             {
               "name": "enable",
@@ -61,7 +61,7 @@
         },
 {
           "name": "enableAugmentationSet",
-          "doc": "TODO",
+          "doc": "Not used/implemented yet and may be removed",
           "params": [
             {
               "name": "arset",
@@ -72,7 +72,7 @@
         },
 {
           "name": "disableAugmentationSet",
-          "doc": "TODO",
+          "doc": "Not used/implemented yet and may be removed",
           "params": [
             {
               "name": "arset",
@@ -83,7 +83,7 @@
         },
 {
           "name": "setArThing",
-          "doc": "TODO",
+          "doc": "Passes set of augmentables ie info about markers/planars that should be tracked and 2D/3D models to be rendered",
           "params": [
             {
               "name": "arThing",
@@ -94,7 +94,7 @@
         },
 {
           "name": "setMarkerPoseFrequency",
-          "doc": "TODO",
+          "doc": "Sets the enabled state for marker events and how often these events should be generated based on time",
           "params": [
             {
               "name": "enable",
@@ -110,7 +110,7 @@
         },
 {
           "name": "setMarkerPoseFrameFrequency",
-          "doc": "TODO",
+          "doc": "Sets the enabled state for marker events and how often these events should be generated based on number of frames",
           "params": [
             {
               "name": "enable",
@@ -126,7 +126,7 @@
         },
         {
           "name": "setShowDebugLevel",
-          "doc": "TODO",
+          "doc": "Not used/implemented yet and may be removed",
           "params": [
             {
               "name": "showDebugLevel",
@@ -215,7 +215,7 @@
 },
 {
       "name": "OverlayType",
-      "doc": "TODO",
+      "doc": "Describes which kind of model should be rendered ie 2D or 3D",
       "typeFormat": "ENUM",
       "values": [
         "TYPE2D",
@@ -224,7 +224,7 @@
     },
 {
       "name": "ArThing",
-      "doc": "ArThing doc",
+      "doc": "Container for passing data about the augmentable ie the target (marker or planar) to be tracked and model (2D or 3D) to be rendered",
     "typeFormat": "REGISTER",
        "properties": [
         {
@@ -234,23 +234,23 @@
         },
 	   {
               "name": "overlayType",
-              "doc": "TODO",
+              "doc": "2D or 3D",
               "type": "OverlayType"
             },
 
 	{
           "name": "strings",
-          "doc": "TODO",
+          "doc": "all the sting values relating to the augmentable eg model url",
           "type": "ArKvpString[]"
 	},
           {
               "name": "integers",
-              "doc": "TODO",
+              "doc": "all the integer values relating to the augmentable",
               "type": "ArKvpInteger[]"
             },
             {
               "name": "floats",
-              "doc": "TODO",
+              "doc": "all the float values relating to the augmentable",
               "type": "ArKvpFloat[]"
             }
       ]
