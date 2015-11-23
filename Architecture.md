@@ -78,8 +78,7 @@ var augmentables = '{"augmentables":[' +
 
 The API for Kurento Client to communicate with the 
 AR filter is available at:
-http://80.96.122.50/Markus.Ylikerala/vtt-armarkerdetector/blob/master/
-ar-markerdetector/src/server/interface/armarkerdetector.ArMarkerdetector.kmd.json
+https://github.com/nubomedia-vtt/armodule/blob/master/ar-markerdetector/src/server/interface/armarkerdetector.ArMarkerdetector.kmd.json
 
 //Pass augmentables 
 arFilter.setArThing(Augmentables);
