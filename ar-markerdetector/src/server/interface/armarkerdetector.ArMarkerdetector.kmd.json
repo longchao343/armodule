@@ -43,7 +43,7 @@
           "params": [
             {
               "name": "enable",
-              "doc": "enableAugmentation",
+              "doc": "state to enable or disable augmentation",
               "type": "boolean"
             }
           ]
@@ -54,7 +54,7 @@
           "params": [
             {
               "name": "enable",
-              "doc": "enableMarkerCountvents",
+              "doc": "state to enable of disable generation of MarkerCountvents",
               "type": "boolean"
             }
           ]
@@ -87,7 +87,7 @@
           "params": [
             {
               "name": "arThing",
-              "doc": "setArThing",
+              "doc": "set of ArThings",
               "type": "ArThing[]"
             }
           ]
@@ -98,7 +98,7 @@
           "params": [
             {
               "name": "enable",
-              "doc": "enableMarkerPoseEvents based on time",
+              "doc": "state to enable or disable MarkerPoseEvents based on time",
               "type": "boolean"
             },
             {
@@ -114,7 +114,7 @@
           "params": [
             {
               "name": "enable",
-              "doc": "enableMarkerPoseEvents based on frames",
+              "doc": "state to enable or disable MarkerPoseEvents based on frames",
               "type": "boolean"
             },
             {
@@ -152,12 +152,12 @@
     "properties": [
         {
             "name": "key",
-            "doc": "key",
+            "doc": "unique key for a value",
             "type": "String"
         },
         {
             "name": "value",
-            "doc": "value",
+            "doc": "arbitrary value",
             "type": "String"
         }
     ]
@@ -169,12 +169,12 @@
     "properties": [
         {
             "name": "key",
-            "doc": "key",
+            "doc": "unique key for a value",
             "type": "String"
         },
         {
             "name": "value",
-            "doc": "value",
+            "doc": "arbitrary value",
             "type": "int"
         }
     ]
@@ -185,13 +185,13 @@
     "typeFormat": "REGISTER",
     "properties": [
         {
-            "name": "key",
+            "name": "unique key for a value",
             "doc": "key",
             "type": "String"
         },
         {
             "name": "value",
-            "doc": "value",
+            "doc": "arbitrary value",
             "type": "float"
         }
     ]
@@ -269,7 +269,7 @@
         },
         {
           "name": "countTimestamp",
-          "doc": "countTimestamp",
+          "doc": "timestamp",
           "type": "int"
         },
         {
@@ -301,7 +301,7 @@
         },
         {
           "name": "poseTimestamp",
-          "doc": "poseTimestamp",
+          "doc": "timestamp",
           "type": "int"
         },
         {
@@ -321,7 +321,7 @@
         },
         {
           "name": "markerPose",
-          "doc": "markerPose",
+          "doc": "marker pose",
           "type": "ArMarkerPose[]"
         }       
       ]
