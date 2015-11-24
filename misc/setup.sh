@@ -40,7 +40,7 @@ cd $TARGET/irrlicht-code/source/Irrlicht
 make -j sharedlib NDEBUG=1
 sudo make install
 
-cp $TARGET/vtt-alvar/alvar-2.0.0-src/src/*.h $MISCPATH/../ar-markerdetector/src/server/implementation/objects/
+cp $TARGET/alvar-2.0.0-src/src/*.h $MISCPATH/../ar-markerdetector/src/server/implementation/objects/
 cp $TARGET/alvar-2.0.0-sdk-linux64-gcc44/include/Alvar.h $MISCPATH/../ar-markerdetector/src/server/implementation/objects/
 cp $TARGET/irrlicht-code/include/*.h $MISCPATH/../ar-markerdetector/src/server/implementation/objects/
 make
