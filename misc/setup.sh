@@ -29,14 +29,14 @@ sudo apt-get install libxxf86vm-dev -y
 sudo apt-get install libglu1-mesa-dev -y
 sudo apt-get install xinit -y
 
-cp $(pwd)/misc/IrrCompileConfig.h $TARGET/irrlicht-code/include
-cp $(pwd)/misc/Makefile $TARGET/irrlicht-code/source/Irrlicht/
+cp $(pwd)/IrrCompileConfig.h $TARGET/irrlicht-code/include
+cp $(pwd)/Makefile $TARGET/irrlicht-code/source/Irrlicht/
 
 cd $TARGET/irrlicht-code/source/Irrlicht
 make -j sharedlib NDEBUG=1
 sudo make install
 
-cp $TARGET/vtt-alvar/alvar-2.0.0-src/src/*.h $(pwd)/ar-markerdetector/src/server/implementation/objects/
-cp $TARGET/alvar-2.0.0-sdk-linux64-gcc44/include/Alvar.h $(pwd)/ar-markerdetector/src/server/implementation/objects/
-cp $TARGET/irrlicht-code/include/*.h $(pwd)/ar-markerdetector/src/server/implementation/objects/
+cp $TARGET/vtt-alvar/alvar-2.0.0-src/src/*.h $(pwd)/../ar-markerdetector/src/server/implementation/objects/
+cp $TARGET/alvar-2.0.0-sdk-linux64-gcc44/include/Alvar.h $(pwd)/../ar-markerdetector/src/server/implementation/objects/
+cp $TARGET/irrlicht-code/include/*.h $(pwd)/../ar-markerdetector/src/server/implementation/objects/
 make
