@@ -29,8 +29,8 @@ sudo apt-get install libxxf86vm-dev -y
 sudo apt-get install libglu1-mesa-dev -y
 sudo apt-get install xinit -y
 
-cp IrrCompileConfig.h $TARGET/irrlicht-code/include
-cp Makefile $TARGET/irrlicht-code/source/Irrlicht/
+cp $(pwd)/misc/IrrCompileConfig.h $TARGET/irrlicht-code/include
+cp $(pwd)/misc/Makefile $TARGET/irrlicht-code/source/Irrlicht/
 
 cd $TARGET/irrlicht-code/source/Irrlicht
 make -j sharedlib NDEBUG=1
