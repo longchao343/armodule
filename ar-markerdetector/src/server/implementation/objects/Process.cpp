@@ -1,5 +1,4 @@
-
-
+/** @author Markus Ylikerälä */
  #include "Process.h"
 
  #include <opencv2/objdetect/objdetect.hpp>
@@ -15,13 +14,6 @@
  #include "OverlayType.hpp"
  //#define USE_URL_WGET
 
-#ifdef USE_MARKERLESS
-#include "Pose.h"
-#include "PoseEstimator.h"
-#include <tracker_optflow/pose_tracker.h>
-#include <tracker_optflow/pose_tracker_initializer.h>
-#endif
-
  #define USE_URL_SOUP
  #ifdef USE_URL_SOUP
  #include <libsoup/soup.h>
@@ -32,6 +24,7 @@
 #include <irrlicht.h>
 
 #include <iostream>
+
 
 
 #define SHOWMATRIX 0
@@ -51,12 +44,8 @@ int ArProcess::counter = 0;
 class OwnData {
 public:
   alvar::MarkerDetector<alvar::MarkerData> *marker_detector;
-#ifdef USE_MARKERLESS
-  alvar_tracker::tracker_optflow::PoseTracker *pose_tracker;
+  PlanarTracker *pose_tracker;
   OwnData() : marker_detector(0), pose_tracker(0) {}
-#else
-  OwnData() : marker_detector(0) {}
-#endif
 };
 
 void ArProcess::initAr(cv::Mat& mat){
@@ -144,22 +133,22 @@ ArProcess::~ArProcess() {
     device->drop();
   }
 
-  std::cout<<"BYE 2" << std::endl << std::flush;
+if(planarTracker){
+delete planarTracker;
+}
+
   if (owndata){
     if (static_cast<OwnData*>(owndata)->marker_detector) delete static_cast<OwnData*>(owndata)->marker_detector;
-#ifdef USE_MARKERLESS
+
     if (static_cast<OwnData*>(owndata)->pose_tracker) delete static_cast<OwnData*>(owndata)->pose_tracker;
-#endif
+
     delete static_cast<OwnData*>(owndata);
     owndata = 0;
   }
 
-  std::cout<<"BYE 3" << std::endl << std::flush;  
   //TODO 2014-12-20
   pthread_mutex_destroy(&mMutex);
-  std::cout<<"BYE 4" << std::endl << std::flush;  
   arThings.clear();
-  //flatArThings.clear();
   
   std::cout<<"BYE ~ArProcess() END" << std::endl << std::flush;
 }
@@ -287,60 +276,12 @@ void ArProcess::detect(cv::Mat& mat){
 
   pthread_mutex_lock(&mMutex);
 
-  //std::cout << std::endl <<"***SMART DETECT MARKES AND PLANARS BEGIN\t" << getSubTime() << std::endl;
-  //std::cout << std::endl <<"***SMART MARKERDETECT BEGIN\t" << getSubTime() << std::endl;
   marker_detector.Detect(image, &cam, true, (mShowDebugLevel > 0));
-  //std::cout << std::endl <<"***SMART MARKER DETECT END\t" << getSubTime();
-#if USE_MARKERLESS
-
-  alvar_tracker::tracker_optflow::PoseTracker *pose_tracker = (static_cast<OwnData*>(owndata)->pose_tracker);
-  // Note, that now we detect planar images only if we did not find any markers (this is a speed thing)
-  // if (pose_tracker && pose_tracker->isTracking() && marker_detector.markers->empty()) {
-  if (pose_tracker && marker_detector.markers->empty()) {
-    //std::cout << std::endl <<"***SMART NO MARKER\t" << getSubTime();
-
-    //std::cout << std::endl <<"***SMARTD1\t" << getMillisecondsTime();
-  //if (pose_tracker) {
-    cv::Mat gray;
-    cv::cvtColor(mat, gray, CV_RGB2GRAY);
-    alvar_mobile::Image alvar_image(gray.data, gray.cols, gray.rows);
-    //std::cout << std::endl << "JEE 3B DUMMY" << pose_tracker->isTracking() << std::endl<<std::flush;
-    //alvar_image.setImage(frame.data, alvar_mobile::Image::FORMAT_BGR, frame.cols, frame.rows, frame.step); // Some methods need also BGR (?)
-    //std::cout << std::endl <<"***SMART PLANAR BEGIN\t" << getSubTime();
-    if (pose_tracker->process(alvar_image) && (pose_tracker->getTrackerFramecount() > 2)) {
-      //std::cout << std::endl <<"***SMART PLANAR DETECT END\t" << getSubTime();
-      //std::cout << std::endl << "JEE 3C" << std::endl<<std::flush;
-      std::string imgname(basename(pose_tracker->getPcPtr()->img[0].filename.c_str()));
-      if (planar_image_ids.find(imgname) != planar_image_ids.end()) {
-	//std::cout << std::endl << "JEE 3D" << std::endl<<std::flush;
-        // Act exactly like the marker_detector found this marker?
-        //std::cout<<imgname<<": "<<planar_image_ids[imgname]<<std::endl;
-        alvar::MarkerData marker;
-        marker.SetId(planar_image_ids[imgname]);
-        alvar_mobile::Matrix4r m = pose_tracker->getPose().matrix();
-        double mgl[16] = {
-          m(0,0), m(1,0), m(2,0), m(3,0),
-          m(0,1), m(1,1), m(2,1), m(3,1),
-          m(0,2), m(1,2), m(2,2), m(3,2),
-          m(0,3), m(1,3), m(2,3), m(3,3)
-	};
-        marker.pose.SetMatrixGL(mgl, false);
-        detectedMarkerData.push_back(marker);
-	//std::cout << std::endl <<"***SMART PLANAR DETECTED\t" << getSubTime() << std::endl;
-	SMART_TIMESTAMP("PLANAR DETECTED", getSubTime());
-      }
-    }
-    else{
-      //std::cout << std::endl <<"***SMART NO MARKERS OR PLANARS DETECTED\t" << getSubTime()<< std::endl;
+  if(marker_detector.markers->empty()) {
+    if(planarTracker){
+      planarTracker->trackPlanars(mat, detectedMarkerData);
     }
   }
-  else{
-    //std::cout << std::endl <<"***SMART MARKERS DETECTED\t" << getSubTime()<< std::endl;
-  }
-  //std::cout << std::endl <<"***SMART DETECT END\t" << getSubTime();
-  //std::cout << std::endl << "JEE 4" << std::endl<<std::flush;
-
-#endif
   pthread_mutex_unlock(&mMutex);
 
   for(size_t i=0; i<marker_detector.markers->size(); i++){
@@ -354,26 +295,13 @@ void ArProcess::detect(cv::Mat& mat){
   //std::cout<<"DETECTED: "<<marker_detector.markers->size()<<" -> "<<detectedMarkerData.size()<<" -> "<<detectedMarkers.size()<<std::endl;
 }
 
+
 void ArProcess::solveProjectionMatrix(cv::Mat& mat){
   cam.SetSimpleCalib(mat.cols, mat.rows, 0.85);  
-  //cam.SetRes(image->width, image->height);  // TODO: Note SetRes does not work correctly in ALVAR!
-
   cam.GetOpenglProjectionMatrix(pmatrix, mat.cols, mat.rows);
-#if USE_MARKERLESS
-  alvar_tracker::tracker_optflow::PoseTracker *pose_tracker = (static_cast<OwnData*>(owndata)->pose_tracker);
-  if (pose_tracker) {
-    //int w = pose_tracker->getCamera().width(), h = pose_tracker->getCamera().height();
-    //if (w != mat.cols) {
-      if (!conf_planar.empty()) {
-        alvar_mobile::Camera mcam(mat.cols, Eigen::Vector2d(mat.cols/2, mat.rows/2), Eigen::Vector2d(mat.cols, mat.rows));
-        if (pose_tracker->open(conf_planar.c_str(), mat.cols, mat.rows, &mcam)) {
-          std::cout<<"Initialized pose_tracker: "<<conf_planar<<" "<<mat.cols<<"x"<<mat.rows<<std::endl;
-          std::cout<<pose_tracker->getCamera().width()<<std::endl;
-        }
-      }
-      //}
+  if(planarTracker){
+    planarTracker->solveProjectionMatrix(mat);
   }
-#endif
 }
 
 void ArProcess::proactivate(cv::Mat& mat){
@@ -541,12 +469,6 @@ ArProcess::ArProcess() : owndata(0), mShowDebugLevel(0) {
   smgr = NULL;
   reboot = false;
 
-#if USE_MARKERLESS
-  std::cout<<"Use markerless" << std::endl << std::flush;
-#else
-  std::cout<<"User marker" << std::endl << std::flush;
-#endif
-
   char tmpbase[] = "/tmp/ar_XXXXXX";
   tmpdir = mkdtemp(tmpbase);
   std::cout<<"\n\n\n*** JESTAS ***\ntmpDir: "<< tmpdir << "#" << string(tmpdir) <<std::endl;
@@ -560,11 +482,14 @@ ArProcess::ArProcess() : owndata(0), mShowDebugLevel(0) {
   //marker_detector.SetMarkerSize(15);
   marker_detector.SetMarkerSize(2);
 
-#if USE_MARKERLESS
-  static_cast<OwnData*>(owndata)->pose_tracker = new alvar_tracker::tracker_optflow::PoseTracker();
-  alvar_tracker::tracker_optflow::PoseTracker *pose_tracker = (static_cast<OwnData*>(owndata)->pose_tracker);
-#endif
 
+#if 1
+planarTracker = new PlanarTracker();
+#else
+planarTracker = new NullTracker();
+//planarTracker = new SmartTracker();
+#endif
+  
   oldTimer = 0;
   markerPoseFrequency = 1;
   sequenceNum = 0;
@@ -665,9 +590,7 @@ void ArProcess::erasePopulation(){
   flats.clear();  
   fixedNodes.clear();
   nodes.clear();
-#ifdef USE_MARKERLESS
-  planar_image_ids.clear();
-#endif
+  planarTracker->clear();
   positions.clear();
   rotations.clear();
 }
@@ -748,13 +671,11 @@ void ArProcess::populate(){
     }
     std::cout << "GO C" << std::endl;
 
-#if USE_MARKERLESS
     if (strings.find("detect_planar") != strings.end()) {
       std::cout<<"got detect_planar" << std::endl;
-      planar_image_ids[strings["detect_planar"]] = arThing->getMarkerId();
+      planarTracker->planar_image_ids[strings["detect_planar"]] = arThing->getMarkerId();
       std::cout<<"Planar image \""<<strings["detect_planar"]<<" can replace marker "<<arThing->getMarkerId()<<std::endl;
     }
-#endif
     
     std::shared_ptr<OverlayType> overlayType = arThing->getOverlayType();
 
@@ -818,100 +739,15 @@ void ArProcess::populate(){
     std::cout << "...LOADED" << std::endl << std::flush;
   }
 
-#ifdef USE_MARKERLESS
-  if(planar_image_ids.size() > 0){
+  if(planarTracker->planar_image_ids.size() > 0){
     std::cout<<"yes createPlanarConfiguration" << std::flush;
-    createPlanarConfiguration();
+    planarTracker->createPlanarConfiguration(tmpdir, width, height);
     std::cout << "...PLANARED" << std::endl << std::flush;
   }
-#endif
 
   pthread_mutex_unlock(&mMutex);
   //std::cout << std::endl <<"***SMART GOGO\t" << getSubTime()<< std::endl;
 }
-
-void ArProcess::createPlanarConfiguration(){
-#ifdef USE_MARKERLESS
-
-#if 0
-  if (static_cast<OwnData*>(owndata)->pose_tracker){
-    delete static_cast<OwnData*>(owndata)->pose_tracker;
-  }
-  static_cast<OwnData*>(owndata)->pose_tracker = new alvar_tracker::tracker_optflow::PoseTracker();
-  alvar_tracker::tracker_optflow::PoseTracker *pose_tracker = (static_cast<OwnData*>(owndata)->pose_tracker);
-#endif
-
-  unsigned long currentTime = getMillisecondsTime();
-  conf_planar = std::string(tmpdir) + "/" + std::to_string(currentTime) + "_conf.xml";
-  //conf_planar = std::string(tmpdir) + "/conf.xml";
-  std::cout<<"Creating planar configuration "<<conf_planar<<std::endl;
-  std::ofstream off(conf_planar);
-  off<<"<?xml version=\"1.0\"?>"<<std::endl;
-  off<<"<opencv_storage>"<<std::endl;
-  off<<"<track_method>0</track_method>"<<std::endl;
-  off<<"<init_method>0</init_method>"<<std::endl;
-  off<<"<init_detector>ORB-400</init_detector>"<<std::endl;
-  off<<"<init_extractor>BRIEF-32</init_extractor>"<<std::endl;
-  off<<"<init_index_speed_weight>85.</init_index_speed_weight>"<<std::endl;
-  off<<"<init_four_orientations>-1</init_four_orientations>"<<std::endl;
-  off<<"<lk_res>13</lk_res>"<<std::endl;
-  off<<"<lk_levels>3</lk_levels>"<<std::endl;
-  off<<"<lk_iter>5</lk_iter>"<<std::endl;
-  
-  //TODO Check these for low resolotion:
-  if(width < 640 || height < 480){
-    off<<"<init_planar_novel_views>0</init_planar_novel_views>"<<std::endl;
-    off<<"<init_planar_novel_zooms>0</init_planar_novel_zooms>"<<std::endl; 
-  }
-  else{
-    off<<"<init_planar_novel_views>3</init_planar_novel_views>"<<std::endl;
-    off<<"<init_planar_novel_zooms>1</init_planar_novel_zooms>"<<std::endl; 
-  }
-  off<<"</opencv_storage>"<<std::endl;
-  off.close();
-
-  std::map<std::string, int> new_map;
-  std::map<std::string, int>::iterator iter;
-  for (iter = planar_image_ids.begin(); iter != planar_image_ids.end(); iter++) {
-    std::string imgname(basename(iter->first.c_str()));
-    if (!imgname.empty()) {
-      std::string targetimgname = std::string(tmpdir) + "/" + imgname;
-
-      //cv::Mat t = cv::imread(iter->first);
-      //if (t.data) {
-      //  cv::imwrite(targetimgname, t);
-      //}
-      std::ifstream  src(iter->first, std::ios::binary);
-      std::ofstream  dst(targetimgname, std::ios::binary);
-      dst << src.rdbuf();
-      src.close();
-      dst.close();
-      std::cout<<"Copied image to: "<<targetimgname<<std::endl;
-      new_map[imgname] = iter->second;
-
-/* TODO: Why does not the imread work for JPG?
-      cv::Mat tmp = cv::imread(targetimgname);
-      if (tmp.data) std::cout<<"Reading image "<<targetimgname<<" OK"<<std::endl;
-      else          std::cout<<"Reading image "<<targetimgname<<" FAILED"<<std::endl;
-      cv::Mat tmp2 = cv::imread("/opt/hughlaurie.jpg");
-      if (tmp2.data) std::cout<<"Reading image "<<"/opt/hughlaurie.jpg"<<" OK"<<std::endl;
-      else          std::cout<<"Reading image "<<"/opt/hughlaurie.jpg"<<" FAILED"<<std::endl;
-      cv::Mat tmp3 = cv::imread("/opt/hughlaurie2.jpg");
-      if (tmp3.data) std::cout<<"Reading image "<<"/opt/hughlaurie2.jpg"<<" OK"<<std::endl;
-      else          std::cout<<"Reading image "<<"/opt/hughlaurie2.jpg"<<" FAILED"<<std::endl;
-      cv::Mat tmp4 = cv::imread("/opt/hughlaurie2.png");
-      if (tmp4.data) std::cout<<"Reading image "<<"/opt/hughlaurie2.png"<<" OK"<<std::endl;
-      else          std::cout<<"Reading image "<<"/opt/hughlaurie2.png"<<" FAILED"<<std::endl;
-      cv::Mat tmp5 = cv::imread("/opt/fruits.jpg");
-      if (tmp5.data) std::cout<<"Reading image "<<"/opt/fruits.jpg"<<" OK"<<std::endl;
-      else          std::cout<<"Reading image "<<"/opt/fruits.jpg"<<" FAILED"<<std::endl;
-*/
-    }
-  }
-  planar_image_ids = new_map;
-#endif
-}
-
 
 cv::Mat ArProcess::set_overlay(std::string overlay_image, 
 			       std::string overlay_text, 

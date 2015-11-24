@@ -12,11 +12,7 @@
 #include "ArKvpFloat.hpp"
 #include <memory>
 
-#if 0
-#define SMART_TIMESTAMP(msg, time); {std::cout << std::endl << "***SMART " << msg << "\t" << time << std::endl;}
-#else
-#define SMART_TIMESTAMP(msg, time); /**/
-#endif
+#include "Misc.h"
 
 #include "irrlicht.h"
 #include <sys/time.h>
@@ -28,85 +24,10 @@ using namespace module;
 using namespace armarkerdetector;
 using namespace irr;
 
-#include <time.h>
 
-class StopWatch{
- private:
-#if 0
-  unsigned long startTime;
-  unsigned long stopTime;
-  unsigned long subTime;
-#endif
+#include "PlanarTracker.h"
 
-  double startTime;
-  double stopTime;
-  double subTime;
-  double filterTime;
-
-  double getTime(){
-    timespec tick;
-    clock_gettime(CLOCK_MONOTONIC, &tick);
-    return (tick.tv_sec * 1000) + (tick.tv_nsec)/1000000.0;
-  }
-
-#if 0
-  unsigned long getTime(){
-    struct timeval tv;
-    if(gettimeofday(&tv, NULL) != 0){
-      return 0;
-    }
-    return (unsigned long)((tv.tv_sec * 1000ul) + (tv.tv_usec / 1000ul));
-  }
-#endif
-
- public:
-  StopWatch(){
-    start();
-  }
-
-  void start(){
-    startTime = getTime();
-    subTime = startTime;
-  }
-
-  /*
-  void stop(){
-    stopTime = getTime();
-  }   
-  */
-
-#if 0
-  unsigned long getElapsedTime(){
-    return getTime() - startTime;
-  }
-
-  unsigned long getSubTime(){
-    unsigned long tmp = getTime();
-    unsigned long subElapsed = tmp - subTime;
-    subTime = tmp;
-    return subElapsed;
-  }
-#endif
-
-  double getElapsedTime(){
-    return getTime() - startTime;
-  }
-
-  double resetFilterTime(){
-    filterTime = getTime();
-  }
-  double getFilterTime(){
-    return getTime() - filterTime;
-  }
-
-  double getSubTime(){
-    double tmp = getTime();
-    double subElapsed = tmp - subTime;
-    subTime = tmp;
-    return subElapsed;
-  }
-
-};
+#include "Stopwatch.h"
 
 class ArProcess {
  private:
@@ -157,7 +78,7 @@ class ArProcess {
   int mShowDebugLevel;
   pthread_mutex_t mMutex;
   void *owndata;
-  StopWatch stopWatch;
+  Stopwatch stopwatch;
 
   void setPoseScale(irr::scene::IAnimatedMeshSceneNode* node, float value);
   void setPosePosition(int id, float value, int type);
@@ -169,10 +90,7 @@ class ArProcess {
   std::map<int, int> detectedMarkers; 
   std::map<int, int> detectedMarkersPrev;
 
-#ifdef USE_MARKERLESS
-  std::string conf_planar;
-  std::map<std::string, int> planar_image_ids;
-#endif
+  PlanarTracker *planarTracker;
 
   std::vector<alvar::MarkerData> detectedMarkerData;
   double pmatrix[16];    
@@ -180,7 +98,6 @@ class ArProcess {
 
   void initAr(cv::Mat& mat);
   void parseAugmentable(ArThing *arThing, std::map<std::string, std::string>& strings, std::map<std::string, float>& floats);
-  void createPlanarConfiguration();
   void solveProjectionMatrix(cv::Mat& mat);
 
   bool splitModel(std::string modelUrl, std::string &modelLocal, std::string &modelSuffix);
@@ -198,9 +115,8 @@ public:
   ArProcess();
   ~ArProcess();
 
-
   void start(){
-    stopWatch.start();
+    stopwatch.start();
   }
 
   /*
@@ -209,20 +125,20 @@ public:
   }   
   */
   unsigned long getElapsedTime(){    
-    return stopWatch.getElapsedTime();
+    return stopwatch.getElapsedTime();
   }
 
   unsigned long getSubTime(){
-    return stopWatch.getSubTime();
+    return stopwatch.getSubTime();
   }
 
 
   void resetFilterTime(){
-    stopWatch.resetFilterTime();
+    stopwatch.resetFilterTime();
   }
 
   unsigned long  getFilterTime(){
-    return stopWatch.getFilterTime();
+    return stopwatch.getFilterTime();
   }
 
   void detect(cv::Mat& mat);
@@ -279,6 +195,10 @@ public:
   }
 
   void setArThing (const std::vector<std::shared_ptr<ArThing>> setArThing);
+
+  float getTimeStamp(){
+    return 667;
+  }
 };
 
 G_END_DECLS
