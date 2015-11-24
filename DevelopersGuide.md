@@ -2,10 +2,22 @@ Developers Guide
 =========================
 This documents provides information how to develope the ARModule. 
 
+Clone repository:
 ```bash
 sudo apt-get install git
 git clone https://github.com/nubomedia-vtt/armodule.git
-cd armodule
+```
+
+Setup the developing environment
+```bash
+cd armodule/misc
+chmod u+x setup.sh
+./setup.sh
+cd ..
+```
+
+Create a folder to build the ARModule
+```bash
 mkdir build
 cd build
 ```
@@ -35,3 +47,8 @@ export KURENTO_MODULES_PATH=$KURENTO_MODULES_PATH:/home/$NAME/nubomedia/armodule
 export GST_PLUGIN_PATH=$GST_PLUGIN_PATH:/home/$NAME/nubomedia/armodule/build
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/$NAME/nubomedia/alvar-2.0.0-sdk-linux-gcc44/bin/
 ```
+
+Please for details see also 
+[ARModule Demo](https://github.com/nubomedia-vtt/armoduledemos)
+for details and as an example how the ARModule can be utilized.
+
