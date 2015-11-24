@@ -185,8 +185,8 @@
     "typeFormat": "REGISTER",
     "properties": [
         {
-            "name": "unique key for a value",
-            "doc": "key",
+            "name": "key",
+            "doc": "unique key for a value",
             "type": "String"
         },
         {
