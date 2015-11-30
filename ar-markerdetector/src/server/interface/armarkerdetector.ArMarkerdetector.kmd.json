@@ -83,7 +83,7 @@
         },
 {
           "name": "setArThing",
-          "doc": "Passes set of augmentables ie info about markers/planars that should be tracked and 2D/3D models to be rendered",
+          "doc": "Passes set of augmentables ie info about markers/planars that should be tracked and 2D/3D models to be rendered. See description of ArThing for more details",
           "params": [
             {
               "name": "arThing",
@@ -147,7 +147,7 @@
 "complexTypes":[
 {
     "name": "ArKvpString",
-    "doc": "AR KeyValuePair",
+    "doc": "AR Key-Value-Pair",
     "typeFormat": "REGISTER",
     "properties": [
         {
@@ -164,7 +164,7 @@
 },
 {
     "name": "ArKvpInteger",
-    "doc": "AR KeyValuePair",
+    "doc": "AR Key-Value-Pair",
     "typeFormat": "REGISTER",
     "properties": [
         {
@@ -181,7 +181,7 @@
 },
 {
     "name": "ArKvpFloat",
-    "doc": "AR KeyValuePair",
+    "doc": "AR Key-Value-Pair",
     "typeFormat": "REGISTER",
     "properties": [
         {
@@ -198,7 +198,7 @@
 },
 {
     "name": "ArMarkerPose",
-    "doc": "Pose doc",
+    "doc": "Pose of tracked marker expressed as 4x4 matrix",
     "typeFormat": "REGISTER",
     "properties": [
         {
@@ -240,7 +240,7 @@
 
 	{
           "name": "strings",
-          "doc": "all the sting values relating to the augmentable eg model url",
+          "doc": "all the sting values relating to the augmentable eg model url. See DevelopersGuide for more details.",
           "type": "ArKvpString[]"
 	},
           {
