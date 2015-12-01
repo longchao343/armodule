@@ -1125,7 +1125,7 @@ void ArProcess::setPose (int id, int type, float value){
   }
 }
 
-void ArProcess::generateEvents(std::shared_ptr<MediaObject> mo, sigc::signal<void, MarkerPose> signalMarkerPose, sigc::signal<void, MarkerCount> signalMarkerCount, cv::Mat& mat){
+void ArProcess::generateEvents(std::shared_ptr<MediaObject> mo, sigc::signal<void, MarkerPose> signalMarkerPose, sigc::signal<void, MarkerCount> signalMarkerCount, sigc::signal<void, Tick> signalTick, cv::Mat& mat){
   ++sequenceNum;
   unsigned long timeStamp = 0;
   getTimeStamp(&timeStamp);
@@ -1138,6 +1138,11 @@ void ArProcess::generateEvents(std::shared_ptr<MediaObject> mo, sigc::signal<voi
   if(markerCountEnabled){
     generateCountEvents(signalMarkerCount, mo, timeStamp);
   }
+
+  if(ticksEnabled){
+    generateTickEvents(signalTick, mo, timeStamp);
+  }
+  ticks.clear();
 }
 
 void ArProcess::generatePoseEvents(sigc::signal<void, MarkerPose> signalMarkerPose, std::shared_ptr<MediaObject> mo, unsigned long timeStamp, cv::Mat& mat){
@@ -1205,6 +1210,25 @@ void ArProcess::generateCountEvents(sigc::signal<void, MarkerCount> signalMarker
     } catch (std::bad_weak_ptr &e) {}
     catch(std::exception const & ex){
       std::cout<<"COUNT EXT: "<< std::endl<<std::flush;
+    }
+  }
+}
+
+void ArProcess::generateTickEvents(sigc::signal<void, Tick> signalTick, std::shared_ptr<MediaObject> mo, unsigned long timeStamp){
+
+  std::map<int, std::string>::iterator iter;  
+  for(iter = ticks.begin(); iter != ticks.end(); iter++) {
+    int timestamp = iter->first;
+    std::string msg = iter->second;
+    try {
+      Tick event(mo,
+		 Tick::getName(), msg, timestamp
+		 );
+      signalTick(event);
+    }
+    catch (std::bad_weak_ptr &e) {}
+    catch(std::exception const & ex){
+    std::cout<<"TICK EXT: "<< std::endl<<std::flush;
     }
   }
 }

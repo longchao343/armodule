@@ -58,6 +58,7 @@ class ArProcess {
   long oldTimer;
   static int counter;
 
+  std::map<int, std::string> ticks;
   std::map<int, core::vector3df> positions;
   std::map<int, core::vector3df> rotations;
   
@@ -85,6 +86,7 @@ class ArProcess {
   void setPoseRotation(int id, float value, int type);
   void generatePoseEvents(sigc::signal<void, MarkerPose> events,  std::shared_ptr<MediaObject> mo, unsigned long timeStamp, cv::Mat& mat);
   void generateCountEvents(sigc::signal<void, MarkerCount> events, std::shared_ptr<MediaObject> mo, unsigned long timeStamp);
+  void generateTickEvents(sigc::signal<void, Tick> events, std::shared_ptr<MediaObject> mo, unsigned long timeStamp);
 
   std::map<int, int> fixedAugmentables; 
   std::map<int, int> detectedMarkers; 
@@ -112,6 +114,12 @@ class ArProcess {
   unsigned long getMillisecondsTime();
 
 public:
+
+  void SMART_TIMESTAMP(std::string msg, unsigned long time){
+    std::string value = "***SMART " + msg +  "\t"; 
+    ticks[(int)time] = value;
+  }
+
   ArProcess();
   ~ArProcess();
 
@@ -119,11 +127,6 @@ public:
     stopwatch.start();
   }
 
-  /*
-  void stop(){
-    stopWatch.stop();
-  }   
-  */
   unsigned long getElapsedTime(){    
     return stopwatch.getElapsedTime();
   }
@@ -142,7 +145,7 @@ public:
   }
 
   void detect(cv::Mat& mat);
-  void generateEvents(std::shared_ptr<MediaObject> mo, sigc::signal<void, MarkerPose> signalMarkerPose, sigc::signal<void, MarkerCount> signalMarkerCount, cv::Mat& mat);
+  void generateEvents(std::shared_ptr<MediaObject> mo, sigc::signal<void, MarkerPose> signalMarkerPose, sigc::signal<void, MarkerCount> signalMarkerCount, sigc::signal<void, Tick> signalTick, cv::Mat& mat);
 
   cv::Mat set_overlay(std::string overlay_image, 
 		      std::string overlay_text, 
@@ -151,10 +154,10 @@ public:
 
   bool augmentationEnabled;
   bool markerCountEnabled;
+  bool ticksEnabled;
   bool markerPoseFrequencyEnabled;
   bool markerPoseFrameFrequencyEnabled;
   int sequenceNum;
-
 
   void writeImage(std::string name, cv::Mat& mat);
   void proactivate(cv::Mat& mat);
@@ -178,13 +181,9 @@ public:
   void enableMarkerCountEvents (bool enable){
     markerCountEnabled = enable;
   }
-
-  void enableAugmentationSet (const std::vector<int> &enableAugmentation){
+  void enableTickEvents (bool enable){
+    ticksEnabled = enable;
   }
-
-  void disableAugmentationSet (const std::vector<int> &disableAugmentation){
-  }
-
   void setMarkerPoseFrequency (bool enable, float frequency){
     markerPoseFrequencyEnabled = enable;
     markerPoseFrequency = frequency;
@@ -195,10 +194,6 @@ public:
   }
 
   void setArThing (const std::vector<std::shared_ptr<ArThing>> setArThing);
-
-  float getTimeStamp(){
-    return 667;
-  }
 };
 
 G_END_DECLS

@@ -38,17 +38,10 @@ void ArMarkerdetectorImpl::enableMarkerCountEvents (bool enable)
 {
   ArMarkerdetectorOpenCVImpl::enableMarkerCountEvents (enable);
 }
-
-void ArMarkerdetectorImpl::enableAugmentationSet (const std::vector<int> &arset)
+void ArMarkerdetectorImpl::enableTickEvents (bool enable)
 {
-  ArMarkerdetectorOpenCVImpl::enableAugmentationSet (arset);
+  ArMarkerdetectorOpenCVImpl::enableTickEvents (enable);
 }
-
-void ArMarkerdetectorImpl::disableAugmentationSet (const std::vector<int> &arset)
-{
-  ArMarkerdetectorOpenCVImpl::disableAugmentationSet (arset);
-}
-
 void ArMarkerdetectorImpl::setArThing (const std::vector<std::shared_ptr<ArThing>> &arThing)
 {
   ArMarkerdetectorOpenCVImpl::setArThing (arThing);
@@ -62,11 +55,6 @@ void ArMarkerdetectorImpl::setMarkerPoseFrequency (bool enable, float frequency)
 void ArMarkerdetectorImpl::setMarkerPoseFrameFrequency (bool enable, int frequency)
 {
   ArMarkerdetectorOpenCVImpl::setMarkerPoseFrameFrequency (enable, frequency);
-}
-
-void ArMarkerdetectorImpl::setShowDebugLevel (int showDebugLevel)
-{
-  ArMarkerdetectorOpenCVImpl::setShowDebugLevel (showDebugLevel);
 }
 
 MediaObjectImpl *

@@ -57,15 +57,13 @@ public:
 
   virtual ~ArMarkerdetectorImpl () {};
 
-  void setPose (int id, int type, float value);
   void enableAugmentation (bool enable);
   void enableMarkerCountEvents (bool enable);
-  void enableAugmentationSet (const std::vector<int> &arset);
-  void disableAugmentationSet (const std::vector<int> &arset);
+  void enableTickEvents (bool enable);
   void setArThing (const std::vector<std::shared_ptr<ArThing>> &arThing);
   void setMarkerPoseFrequency (bool enable, float frequency);
   void setMarkerPoseFrameFrequency (bool enable, int frequency);
-  void setShowDebugLevel (int showDebugLevel);
+  void setPose (int id, int type, float value);
   // TODO: Kludge, because ArMarkerdetectorOpenCVImpl is not inherited from Med\
   iaObject (?)
   virtual std::shared_ptr<MediaObject> getSharedFromThis() { 

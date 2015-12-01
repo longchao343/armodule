@@ -32,17 +32,16 @@ public:
 
   virtual void process (cv::Mat &mat);
 
-  void setPose (int id, int type, float value);
   void enableAugmentation (bool enable);
   void enableMarkerCountEvents (bool enable);
-  void enableAugmentationSet (const std::vector<int> &arset);
-  void disableAugmentationSet (const std::vector<int> &arset);
+  void enableTickEvents (bool enable);
   void setArThing (const std::vector<std::shared_ptr<ArThing>> &arThing);
   void setMarkerPoseFrequency (bool enable, float frequency);
   void setMarkerPoseFrameFrequency (bool enable, int frequency);
-  void setShowDebugLevel (int showDebugLevel);
+  void setPose (int id, int type, float value);
   sigc::signal<void, MarkerCount> signalMarkerCount;
   sigc::signal<void, MarkerPose> signalMarkerPose;
+  sigc::signal<void, Tick> signalTick;
 
 };
 

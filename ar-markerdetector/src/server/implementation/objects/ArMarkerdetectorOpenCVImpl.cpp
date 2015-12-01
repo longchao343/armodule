@@ -28,7 +28,7 @@ void ArMarkerdetectorOpenCVImpl::process (cv::Mat &orgMat)
   ar.getTimeStamp(&timeStamp);
   //std::cout << std::endl <<"***SMART KMS (WITHOUT ARFILTER)\t" << ar.getElapsedTime()<< std::endl;
 
-  SMART_TIMESTAMP("KMS (WITHOUT ARFILTER)", ar.getElapsedTime());
+  ar.SMART_TIMESTAMP("KMS (WITHOUT ARFILTER)", ar.getElapsedTime());
 
   //std::cout << std::endl <<"***SMART TIME\t" << timeStamp << std::endl;
   ar.start();
@@ -71,7 +71,7 @@ void ArMarkerdetectorOpenCVImpl::process (cv::Mat &orgMat)
   ar.resetFilterTime();
   ar.detect(twisted ? mat : orgMat);
   //std::cout << std::endl <<"***SMART ALLDETECTED\t" << ar.getFilterTime()<< std::endl;
-  SMART_TIMESTAMP("ALLDETECTED", ar.getFilterTime());
+  ar.SMART_TIMESTAMP("ALLDETECTED", ar.getFilterTime());
 
 #if 0
 #if SHOWRESO
@@ -83,10 +83,10 @@ void ArMarkerdetectorOpenCVImpl::process (cv::Mat &orgMat)
   ar.resetFilterTime();
   ar.augment(twisted ? mat : orgMat);  
   //std::cout << std::endl <<"***SMART ALL AUGMENTED\t" << ar.getFilterTime()<< std::endl;
-  SMART_TIMESTAMP("ALL AUGMENTED", ar.getFilterTime());
+  ar.SMART_TIMESTAMP("ALL AUGMENTED", ar.getFilterTime());
 
   ar.resetFilterTime();
-  ar.generateEvents(getSharedFromThis(), signalMarkerPose, signalMarkerCount, twisted ? mat : orgMat);
+  ar.generateEvents(getSharedFromThis(), signalMarkerPose, signalMarkerCount, signalTick, twisted ? mat : orgMat);
   //std::cout << std::endl <<"***SMART ALL EVENTS\t" << ar.getFilterTime()<< std::endl;
 
   }
@@ -128,7 +128,7 @@ catch (const std::exception& ex) {
     }
 #endif
     //std::cout << std::endl <<"***SMART ARFILTER (ONLY)\t"<< ar.getElapsedTime()<< std::endl;
-  SMART_TIMESTAMP("ARFILTER (ONLY)", ar.getElapsedTime());
+  ar.SMART_TIMESTAMP("ARFILTER (ONLY)", ar.getElapsedTime());
   ar.start();
 }
   
@@ -146,16 +146,10 @@ catch (const std::exception& ex) {
     ar.enableMarkerCountEvents(enable);
   }
 
-  void ArMarkerdetectorOpenCVImpl::enableAugmentationSet (const std::vector<int> &enableAugmentation)
-  {
-    ar.enableAugmentationSet(enableAugmentation);
+  void ArMarkerdetectorOpenCVImpl::enableTickEvents (bool enable){
+    ar.enableTickEvents(enable);
   }
-  
-  void ArMarkerdetectorOpenCVImpl::disableAugmentationSet (const std::vector<int> &disableAugmentation)
-  {
-    ar.disableAugmentationSet(disableAugmentation);
-  }
-  
+
 void ArMarkerdetectorOpenCVImpl::setArThing (const std::vector<std::shared_ptr<ArThing>> &setArThing)
 {
   ar.setArThing(setArThing);
@@ -168,12 +162,6 @@ void ArMarkerdetectorOpenCVImpl::setArThing (const std::vector<std::shared_ptr<A
   void ArMarkerdetectorOpenCVImpl::setMarkerPoseFrameFrequency (bool enable, int frequency){
     ar.setMarkerPoseFrameFrequency(enable, frequency);
   }
-
-
-void ArMarkerdetectorOpenCVImpl::setShowDebugLevel (int showDebugLevel)
-{
-  ar.setShowDebugLevel(showDebugLevel);
-}
 
 } /* armarkerdetector */
 } /* module */
