@@ -17,27 +17,6 @@
       },
       "methods": [
 {
-          "name": "setPose",
-          "doc": "Not used/implemented yet and may be removed",
-          "params": [
-            {
-              "name": "id",
-              "doc": "",
-              "type": "int"
-            },
-            {
-              "name": "type",
-              "doc": "",
-              "type": "int"
-            },
-            {
-              "name": "value",
-              "doc": "",
-              "type": "float"
-            }
-          ]
-        },
-{
           "name": "enableAugmentation",
           "doc": "Sets the enabled state of the 2D and 3D rendering",
           "params": [
@@ -54,36 +33,25 @@
           "params": [
             {
               "name": "enable",
-              "doc": "state to enable of disable generation of MarkerCountvents",
+              "doc": "state to enable of disable generation of MarkerCountEvents",
               "type": "boolean"
             }
           ]
         },
 {
-          "name": "enableAugmentationSet",
-          "doc": "Not used/implemented yet and may be removed",
+          "name": "enableTickEvents",
+          "doc": "Sets the enabled state for notifying the listener when number of ticks has elapsed for monitoring",
           "params": [
             {
-              "name": "arset",
-              "doc": "enableAugmentation",
-              "type": "int[]"
-            }
-          ]
-        },
-{
-          "name": "disableAugmentationSet",
-          "doc": "Not used/implemented yet and may be removed",
-          "params": [
-            {
-              "name": "arset",
-              "doc": "disableAugmentation",
-              "type": "int[]"
+              "name": "enable",
+              "doc": "state to enable of disable generation of TickEvents",
+              "type": "boolean"
             }
           ]
         },
 {
           "name": "setArThing",
-          "doc": "Passes set of augmentables ie info about markers/planars that should be tracked and 2D/3D models to be rendered. See description of ArThing for more details",
+          "doc": "Passes set of augmentables ie info about markers/planars that should be tracked and 2D/3D models to be rendered. See description of ArThing for more details.",
           "params": [
             {
               "name": "arThing",
@@ -123,22 +91,10 @@
               "type": "int"
             }
           ]
-        },
-        {
-          "name": "setShowDebugLevel",
-          "doc": "Not used/implemented yet and may be removed",
-          "params": [
-            {
-              "name": "showDebugLevel",
-              "doc": "show debug info on image",
-              "type": "int"
-            }
-          ]
         }
       ],
       "events": [
-        "MarkerCount", "MarkerPose"
-
+        "MarkerCount", "MarkerPose", "Tick"
       ]
     }
   ],
@@ -147,7 +103,7 @@
 "complexTypes":[
 {
     "name": "ArKvpString",
-    "doc": "AR Key-Value-Pair",
+    "doc": "AR Key-Value-Pair of Strings and Strings for passing data",
     "typeFormat": "REGISTER",
     "properties": [
         {
@@ -164,7 +120,7 @@
 },
 {
     "name": "ArKvpInteger",
-    "doc": "AR Key-Value-Pair",
+    "doc": "AR Key-Value-Pair of Strings and integers for passing data",
     "typeFormat": "REGISTER",
     "properties": [
         {
@@ -181,7 +137,7 @@
 },
 {
     "name": "ArKvpFloat",
-    "doc": "AR Key-Value-Pair",
+    "doc": "AR Key-Value-Pair of Strings and floats for passing data",
     "typeFormat": "REGISTER",
     "properties": [
         {
@@ -198,7 +154,7 @@
 },
 {
     "name": "ArMarkerPose",
-    "doc": "Pose of tracked marker expressed as 4x4 matrix",
+    "doc": "Pose doc",
     "typeFormat": "REGISTER",
     "properties": [
         {
@@ -240,7 +196,7 @@
 
 	{
           "name": "strings",
-          "doc": "all the sting values relating to the augmentable eg model url. See DevelopersGuide for more details.",
+          "doc": "all the sting values relating to the augmentable eg model url . See DevelopersGuide for more details.",
           "type": "ArKvpString[]"
 	},
           {
@@ -324,6 +280,23 @@
           "doc": "marker pose",
           "type": "ArMarkerPose[]"
         }       
+      ]
+    },
+    {
+      "name": "Tick",
+      "extends": "Media",
+      "doc": "An event that is sent from some predifined monitoring points of the module ",
+      "properties": [
+        {
+            "name": "msg",
+            "doc": "message descriping the tick",
+            "type": "String"
+        },
+        {
+          "name": "timestamp",
+          "doc": "tick timestamp",
+          "type": "int"
+        }
       ]
     }
   ]

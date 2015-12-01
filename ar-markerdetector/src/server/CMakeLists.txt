@@ -1,32 +1,5 @@
 cmake_minimum_required (VERSION 2.8)
 
-set(USE_MARKERLESS TRUE CACHE BOOL "USE_MARKERLESS")
-if(USE_MARKERLESS)
-
-  #set (AlvarMobile "/home/$ENV{USER}/nubomedia/alvar-tracker-linux64-timebomb/alvar-mobile-dist/")
-       #set (AlvarTrackerMobile "/home/$ENV{USER}/nubomedia/alvar-tracker-linux64-timebomb/alvar-tracker-dist/")
-       #set (EIGEN_ROOT /usr/include/eigen3/)
-	SET(AlvarMobile_DIR "NOTFOUND" CACHE PATH "ALVAR Mobile root dir")
-
-	FIND_PACKAGE(AlvarMobile REQUIRED HINTS "/home/tteyli/nubomedia/alvar-tracker-linux64-timebomb/alvar-mobile-dist/")
-	INCLUDE_DIRECTORIES(${AlvarMobile_INCLUDE_DIRS})
-
-	SET(AlvarTrackerMobile_DIR "NOTFOUND" CACHE PATH "ALVAR Tracker Mobile root dir")
-	FIND_PACKAGE(AlvarTrackerMobile REQUIRED HINTS "/home/tteyli/nubomedia/alvar-tracker-linux64-timebomb/alvar-tracker-dist/")
-	INCLUDE_DIRECTORIES(${AlvarTrackerMobile_INCLUDE_DIRS})
-
-	set (EIGEN_ROOT /usr/include/eigen3/)
-	#set(EIGEN_ROOT "NOT-FOUND" CACHE PATH "Eigen root dir")
-	include_directories(${EIGEN_ROOT})
-
-	#set(OpenCV_DIR "NOT-FOUND" CACHE PATH "OpenCV root dir")
-	#find_package(OpenCV REQUIRED)
-
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_MARKERLESS")
-endif()
-
-
-
 #find_path (ALVAR_SDK
 #	NAMES include/Alvar.h
 #	HINTS 
@@ -83,17 +56,6 @@ include (CodeGenerator)
 # )
 
 
-if(USE_MARKERLESS)
-	generate_code (
-	  MODELS ${CMAKE_CURRENT_SOURCE_DIR}/interface
-	  INTERFACE_LIB_EXTRA_INCLUDE_DIRS ${ALVAR_INC}
-	  SERVER_IMPL_LIB_EXTRA_SOURCES implementation/objects/Process.cpp
-	  SERVER_IMPL_LIB_EXTRA_HEADERS implementation/objects/Process.h
-	  SERVER_IMPL_LIB_EXTRA_INCLUDE_DIRS ${ALVAR_INC} ${SOUP_INCLUDE_DIRS} ${IRRLICHT_INC} ${AlvarMobile_INCLUDE_DIRS} ${AlvarTrackerMobile_INCLUDE_DIRS} ${EIGEN_ROOT}
-	  SERVER_IMPL_LIB_EXTRA_LIBRARIES ${ALVAR_LIB} ${SOUP_LIBRARIES} ${IRRLICHT_LIB} ${AlvarMobile_LIBRARIES} ${AlvarTrackerMobile_LIBRARIES} ${OpenCV_LIBS}
-	  SERVER_STUB_DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/implementation/objects
-	)
-else()
 	generate_code (
 	  MODELS ${CMAKE_CURRENT_SOURCE_DIR}/interface
 	  INTERFACE_LIB_EXTRA_INCLUDE_DIRS ${ALVAR_INC}
@@ -103,4 +65,4 @@ else()
 	  SERVER_IMPL_LIB_EXTRA_LIBRARIES ${ALVAR_LIB} ${SOUP_LIBRARIES} ${IRRLICHT_LIB}
 	  SERVER_STUB_DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/implementation/objects
 	)
-endif()
+
