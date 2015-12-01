@@ -17,6 +17,27 @@
       },
       "methods": [
 {
+          "name": "setPose",
+          "doc": "sets operation ie position/rotation/scale of 3D model",
+          "params": [
+            {
+              "name": "id",
+              "doc": "model id",
+              "type": "int"
+            },
+            {
+              "name": "type",
+              "doc": "operation type",
+              "type": "int"
+            },
+            {
+              "name": "value",
+              "doc": "magnitude",
+              "type": "float"
+            }
+          ]
+        },
+{
           "name": "enableAugmentation",
           "doc": "Sets the enabled state of the 2D and 3D rendering",
           "params": [
@@ -293,8 +314,8 @@
             "type": "String"
         },
         {
-          "name": "timestamp",
-          "doc": "tick timestamp",
+          "name": "tickTimestamp",
+          "doc": "timestamp",
           "type": "int"
         }
       ]
