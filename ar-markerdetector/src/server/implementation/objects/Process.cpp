@@ -114,6 +114,10 @@ SIrrlichtCreationParameters p;
 
 	ardummy = 1;
 	isArInitialized = 1;
+
+	skipFrames = true;
+	shadow.create(mat.size(), mat.type());
+
 	std::cout<<"READY FOR 3D" << std::endl << std::flush;
       }
     }

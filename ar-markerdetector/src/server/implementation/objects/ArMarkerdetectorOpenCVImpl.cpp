@@ -5,6 +5,7 @@
 
 #define SHOWRESO 0
 #define TWISTRESO 0
+#define SKIPFRAMES 1
 
 namespace kurento
 {
@@ -64,6 +65,17 @@ void ArMarkerdetectorOpenCVImpl::process (cv::Mat &orgMat)
   try{
   ar.resetFilterTime();
   ar.proactivate(twisted ? mat : orgMat);
+
+#if SKIPFRAMES
+  ar.skipFrames = !ar.skipFrames;
+  if(ar.skipFrames){
+    ar.shadow.copyTo(orgMat);
+    //std::cout << "AR COPY" << std::endl;
+    return;
+  }
+  //std::cout << "AR NOT COPY" << std::endl;  
+#endif
+
   //std::cout << std::endl <<"***SMART PROACTIVE\t" << ar.getFilterTime()<< std::endl;
 
   //SMART_TIMESTAMP("PROACTIVE", ar.getFilterTime());
@@ -89,6 +101,10 @@ void ArMarkerdetectorOpenCVImpl::process (cv::Mat &orgMat)
   ar.generateEvents(getSharedFromThis(), signalMarkerPose, signalMarkerCount, signalTick, twisted ? mat : orgMat);
   //std::cout << std::endl <<"***SMART ALL EVENTS\t" << ar.getFilterTime()<< std::endl;
 
+#if SKIPFRAMES
+  orgMat.copyTo(ar.shadow);
+  //std::cout << "AR FRESH" << std::endl;
+#endif
   }
 catch (const std::exception& ex) {
   std::cout << std::endl <<"BIZARRE EXP :" << ex.what()

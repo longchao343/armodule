@@ -115,6 +115,9 @@ class ArProcess {
 
 public:
 
+  bool skipFrames;
+  cv::Mat shadow;
+
   void SMART_TIMESTAMP(std::string msg, unsigned long time){
     std::string value = "***SMART " + msg +  "\t"; 
     ticks[(int)time] = value;
