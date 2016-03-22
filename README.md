@@ -16,6 +16,17 @@ Eg the zero marker is defined as MarkerData_0.png
 
 http://nubomedia-vtt-ar.readthedocs.org/en/latest/
 
+
+**Artifacts**
+
+Maven Central:
+http://repo1.maven.org/maven2/fi/vtt/nubomedia/arfilter/
+http://repo1.maven.org/maven2/fi/vtt/nubomedia/kurento/arfilterdemo/
+
+Npm:
+https://www.npmjs.com/package/fi-vtt-nubomedia-kurento-module-armarkerdetector
+
+
 **License**
 
 Kurento is distributed as Open Source Software basing LGPL v2.1 license.
