@@ -59,8 +59,8 @@ include (CodeGenerator)
 	generate_code (
 	  MODELS ${CMAKE_CURRENT_SOURCE_DIR}/interface
 	  INTERFACE_LIB_EXTRA_INCLUDE_DIRS ${ALVAR_INC}
-	  SERVER_IMPL_LIB_EXTRA_SOURCES implementation/objects/Process.cpp
-	  SERVER_IMPL_LIB_EXTRA_HEADERS implementation/objects/Process.h
+	  SERVER_IMPL_LIB_EXTRA_SOURCES implementation/objects/Process.cpp  implementation/objects/PlanarTracker.cpp
+	  SERVER_IMPL_LIB_EXTRA_HEADERS implementation/objects/Process.h implementation/objects/PlanarTracker.h
 	  SERVER_IMPL_LIB_EXTRA_INCLUDE_DIRS ${ALVAR_INC} ${SOUP_INCLUDE_DIRS} ${IRRLICHT_INC}
 	  SERVER_IMPL_LIB_EXTRA_LIBRARIES ${ALVAR_LIB} ${SOUP_LIBRARIES} ${IRRLICHT_LIB}
 	  SERVER_STUB_DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/implementation/objects
