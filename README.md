@@ -58,9 +58,8 @@ You can contribute to the Nubomedia community through bug-reports, bug-fixes, ne
   before it being incorporated into the Nubomedia code-base. You must be ready to
   addressing all these kind of concerns before having your code approved.
 
-Support
+**Support**
 
--------
 Support is provided through the [Nubomedia Public Mailing List]
 
 [NUBOMEDIA]: http://www.nubomedia.eu
