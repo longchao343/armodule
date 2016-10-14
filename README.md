@@ -19,8 +19,7 @@ http://nubomedia-vtt-ar.readthedocs.org/en/latest/
 **Artifacts**
 
 Maven Central:
-http://repo1.maven.org/maven2/fi/vtt/nubomedia/arfilter/
-http://repo1.maven.org/maven2/fi/vtt/nubomedia/kurento/arfilterdemo/
+http://repo1.maven.org/maven2/fi/vtt/nubomedia/armodule/arfilterdemo/
 
 Npm:
 https://www.npmjs.com/package/fi-vtt-nubomedia-kurento-module-armarkerdetector
