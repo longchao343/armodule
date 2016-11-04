@@ -15,14 +15,14 @@ MISCPATH=$(pwd)
 
 #Alvar
 cd $TARGET
-wget -nd http://ssi.vtt.fi/ar-markerdetector-binaries/alvar-2.0.0-sdk-linux64-gcc44.tar.gz
-gzip -d alvar-2.0.0-sdk-linux64-gcc44.tar.gz
-tar xf alvar-2.0.0-sdk-linux64-gcc44.tar
+#wget -nd http://ssi.vtt.fi/ar-markerdetector-binaries/alvar-2.0.0-sdk-linux64-gcc44.tar.gz
+#gzip -d alvar-2.0.0-sdk-linux64-gcc44.tar.gz
+#tar xf alvar-2.0.0-sdk-linux64-gcc44.tar
 sudo cp $TARGET/alvar-2.0.0-sdk-linux64-gcc44/bin/libalvar200.so /usr/local/lib/
 sudo apt-get install libsoup2.4-dev -y
-wget -nd http://ssi.vtt.fi/ar-markerdetector-binaries/alvar-2.0.0-src.tar.gz
-gzip -d alvar-2.0.0-src.tar.gz
-tar xf alvar-2.0.0-src.tar
+#wget -nd http://ssi.vtt.fi/ar-markerdetector-binaries/alvar-2.0.0-src.tar.gz
+#gzip -d alvar-2.0.0-src.tar.gz
+#tar xf alvar-2.0.0-src.tar
 
 #Irrlicht
 sudo apt-get install subversion -y
